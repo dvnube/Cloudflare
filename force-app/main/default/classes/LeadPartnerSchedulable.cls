@@ -10,7 +10,7 @@ public class LeadPartnerSchedulable implements Schedulable {
 
     public void execute(SchedulableContext sc) {
         reschedule(sc);
-        Database.executeBatch(new LeadPartnerBatchable(true, mapFieldsToUpdate)); //
+        Database.executeBatch(new LeadPartnerBatchable(true, mapFieldsToUpdate));
     }
 
     void reschedule(SchedulableContext sc) {
