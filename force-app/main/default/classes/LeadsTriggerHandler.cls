@@ -1,6 +1,6 @@
-public without sharing class LeadsTriggerHandler {
+public without sharing class LeadsTriggerHandler extends TriggerHandler {
     
-    public static void afterInsert() {
+    public override void afterInsert() {
         List<Lead> leadsToUpdate = new List<Lead>();
 
         for (Lead record : (List<Lead>) Trigger.new) {
@@ -8,15 +8,15 @@ public without sharing class LeadsTriggerHandler {
         }
     }
 
-    public static void afterUpdate() {
+    public override void afterUpdate() {
         Map<Id, Lead> oldMap = (Map<Id, Lead>) Trigger.oldMap;
     }
 
-    static void afterInsert(Lead record, List<Lead> leadsToUpdate) {
+    void afterInsert(Lead record, List<Lead> leadsToUpdate) {
         handleDraftLeadSource(record, leadsToUpdate);        
     }
 
-    static void handleDraftLeadSource(Lead record, List<Lead> leadsToUpdate) {
+    void handleDraftLeadSource(Lead record, List<Lead> leadsToUpdate) {
         Lead l = new Lead(Id = record.Id);
 
         if (isPartnerLead(record.DraftSource__c)) {
@@ -29,7 +29,7 @@ public without sharing class LeadsTriggerHandler {
         leadsToUpdate.add(l);
     }
 
-    static Boolean isPartnerLead(String value) {
+    Boolean isPartnerLead(String value) {
         return String.isNotBlank(value) ? value.contains(Label.LeadPartner) : false;
     }
     
