@@ -1,4 +1,7 @@
-trigger LeadsTrigger on Lead (before insert, after insert, after update) {
+trigger LeadsTrigger on Lead (
+    //before insert,
+    after insert,
+    after update) {
     
     /* if (Trigger.isBefore) {
         if (Trigger.isInsert) {
