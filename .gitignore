@@ -38,3 +38,6 @@ $RECYCLE.BIN/
 
 # Local environment variables
 .env
+
+force-app\main\default\profiles
+force-app\main\default\profiles\Admin.profile-meta.xml
