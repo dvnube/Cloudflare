@@ -1,0 +1,13 @@
+<div>
+<div>Hello {!User.FirstName}, You have a new lead in your pipeline!</div>
+
+<div>First Name: {!Lead.FirstName}</div>
+
+<div>Last Name: {!Lead.LastName}</div>
+
+<div>Phone: {!Lead.Phone} </div>
+
+<div>Email: {!Lead.Email} </div>
+
+<div>Click <a href={!Lead.Link}>here</a> to go to the lead</div>
+</div>
