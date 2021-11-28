@@ -1,0 +1,10 @@
+<template>
+  <lightning-accordion allow-multiple-sections-open>
+    <template for:each={page.posts} for:item="post">
+      <c-post-comment-item
+        key={post.postComments.post.id}
+        post-comment={post.postComments}
+      ></c-post-comment-item>
+    </template>
+  </lightning-accordion>
+</template>

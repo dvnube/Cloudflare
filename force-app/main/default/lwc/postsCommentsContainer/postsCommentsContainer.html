@@ -1,13 +1,14 @@
 <template>
   <div class="container">
     <template if:true={loaded}>
-      <template for:each={postsComments} for:item="postComment">
-        <lightning-accordion
-          key={postComment.post.id}
-          allow-multiple-sections-open
-        >
-          <c-post-comment-item post-comment={postComment}></c-post-comment-item>
-        </lightning-accordion>
+      <template for:each={pagesFiltered} for:item="page">
+        <div class="page" key={page.pageNumber}>
+          <div class="header">Page {page.pageNumber}</div>
+          <div key={page.pageNumber} class="page">
+            <c-page-posts page={page}></c-page-posts>
+          </div>
+          <div class="footer">Pagination</div>
+        </div>
       </template>
     </template>
     <template if:false={loaded}>
