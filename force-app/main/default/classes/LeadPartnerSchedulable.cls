@@ -17,7 +17,6 @@ public class LeadPartnerSchedulable implements Schedulable {
         // Re-schedule ourself to run again in "intervalMinutes" time
         Datetime now  = Datetime.now();
         Datetime nextRunTime = now.addMinutes(addMinutes);
-        //todo: levar cronString para Utils
         String cronString = '' + nextRunTime.second() + ' ' + nextRunTime.minute() + ' ' + 
                             nextRunTime.hour() + ' ' + nextRunTime.day() + ' ' + 
                             nextRunTime.month() + ' ? ' + nextRunTime.year(); 
