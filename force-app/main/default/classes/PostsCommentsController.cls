@@ -1,9 +1,11 @@
 public with sharing class PostsCommentsController {
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static String getPosts() {
+        System.debug('getposts');
         String response;
         try {
             response = sendRequest('https://jsonplaceholder.typicode.com/posts');
+            System.debug('response: ' + response);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -11,11 +13,13 @@ public with sharing class PostsCommentsController {
         return response;
     }
 
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static String getComments() {
+        System.debug('getcomments');
         String response;
         try {
             response = sendRequest('https://jsonplaceholder.typicode.com/comments');
+            System.debug('response: ' + response);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
