@@ -7,7 +7,7 @@ global with sharing class LeadsRestManager {
     
     @HttpPost
     global static String createLead(String firstName, String lastName, String phone, String email, String draftLeadSource) {
-        ResponseWrapper rw = new ResponseWrapper();
+        LeadsRestResponseWrapper rw = new LeadsRestResponseWrapper();
 
         Boolean firstNameValid = String.isNotBlank(firstName);
         Boolean lastNameValid = String.isNotBlank(lastName);
@@ -20,10 +20,11 @@ global with sharing class LeadsRestManager {
             rw.Status = Label.Success;
         } else {
             rw.Status = Label.Fail;
-            handleError(rw, firstNameValid, Label.ErrorFirstNameNullBlank);
-            handleError(rw, lastNameValid, Label.ErrorLastNameNullBlank);
-            handleError(rw, phoneValid, Label.ErrorPhoneCharacters);
-            handleError(rw, emailValid, Label.ErrorEmailFormat);
+            rw.ErrorsMessages = new List<LeadsRestResponseWrapper.Error>();
+            handleError(rw, firstNameValid, Lead.FirstName.getDescribe().getName(), Label.ErrorFirstNameNullBlank);
+            handleError(rw, lastNameValid, Lead.LastName.getDescribe().getName(), Label.ErrorLastNameNullBlank);
+            handleError(rw, phoneValid, Lead.Phone.getDescribe().getName(), Label.ErrorPhoneCharacters);
+            handleError(rw, emailValid, Lead.Email.getDescribe().getName(), Label.ErrorEmailFormat);
         }
         
         return JSON.serialize(rw);
@@ -73,7 +74,8 @@ global with sharing class LeadsRestManager {
             LastName = lw.lastName,
             Phone = lw.phone,
             Email = lw.email,
-            DraftSource__c = lw.draftLeadSource
+            DraftSource__c = lw.draftLeadSource,
+            Company = 'Required - Person Accounts not enabled'
         );
     }
 
@@ -85,9 +87,9 @@ global with sharing class LeadsRestManager {
         return (LeadsService.updateFields(new List<Lead>{record}, mapFieldsToUpdate)).get(0);
     }
 
-    static void handleError(ResponseWrapper rw, Boolean valid, String message) {
+    static void handleError(LeadsRestResponseWrapper rw, Boolean valid, String fieldName, String message) {
         if (!valid) {
-            rw.ErrorsMessages.add(message);
+            rw.ErrorsMessages.add(new LeadsRestResponseWrapper.Error(fieldName, message));
         }
     }
 
@@ -106,11 +108,4 @@ global with sharing class LeadsRestManager {
             this.draftLeadSource = draftLeadSource;
         }
     }
-
-    class ResponseWrapper {
-        String LeadId {get;set;}
-        String Status {get;set;}
-        List<String> ErrorsMessages {get;set;}
-    }
-
 }
