@@ -1,9 +1,26 @@
 <template>
   <lightning-accordion-section name={post.id} label={post.title}>
-      POST: {post.body}
-      COMMENTS:
-    <template for:each={comments} for:item="comment">
-      <c-comment-item key={comment.id} comment={comment}></c-comment-item>
-    </template>
+    <div class="post">
+      <div class="body">{post.body}</div>
+      <div class="comments-section">
+        <lightning-accordion allow-multiple-sections-open>
+          <lightning-accordion-section
+            name="Comments"
+            label="Comments"
+            class="comments-items"
+          >
+            <template for:each={comments} for:item="comment">
+              <div key={comment.id} class="comment-item">
+                <c-comment-item
+                  key={comment.id}
+                  post={post}
+                  comment={comment}
+                ></c-comment-item>
+              </div>
+            </template>
+          </lightning-accordion-section>
+        </lightning-accordion>
+      </div>
+    </div>
   </lightning-accordion-section>
 </template>

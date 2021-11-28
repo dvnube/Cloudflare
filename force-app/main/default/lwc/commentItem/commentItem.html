@@ -1,8 +1,11 @@
 <template>
-    <div>
-        COMMENT TITLE: {comment.title}
-        COMMENT BODY: {comment.body}
-        COMMENT NAME: {comment.name}
-        COMMENT EMAIL: {comment.email}
-    </div>    
+  <div class="container">
+    <div class="author">
+      <lightning-formatted-email
+        value={comment.email}
+        label={comment.name}
+      ></lightning-formatted-email>
+    </div>
+    <div class="body">{comment.body}</div>
+  </div>
 </template>

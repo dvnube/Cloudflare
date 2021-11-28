@@ -1,0 +1,7 @@
+.container {
+  display: grid;
+  border-style: solid;
+  border-radius: 0.3rem;
+  border-width: thin;
+  padding: 0.3rem;
+}
