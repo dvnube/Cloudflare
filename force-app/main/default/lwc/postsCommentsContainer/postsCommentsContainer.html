@@ -1,13 +1,42 @@
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
 <template>
   <div class="container">
     <template if:true={loaded}>
       <template for:each={pagesFiltered} for:item="page">
         <div class="page" key={page.pageNumber}>
-          <div class="header">Page {page.pageNumber}</div>
+          <div class="header">
+            <div class="title">Posts and comments</div>
+          </div>
           <div key={page.pageNumber} class="page">
             <c-page-posts page={page}></c-page-posts>
           </div>
-          <div class="footer">Pagination</div>
+          <div class="footer">
+            <div class="pagination">
+              <lightning-button-icon
+                icon-name="utility:back"
+                alternative-text="Back"
+                title="Back"
+                onclick={previousPage}
+                style="float: left; padding-right: 1rem"
+              ></lightning-button-icon>
+              <template for:each={pages} for:item="page">
+                <c-pagination-number
+                  key={page.pageNumber}
+                  page-number={page.pageNumber}
+                  selected-page={selectedPage}
+                  onchangepagination={changePagination}
+                ></c-pagination-number>
+              </template>
+              <lightning-button-icon
+                icon-name="utility:forward"
+                alternative-text="Next"
+                title="Next"
+                onclick={nextPage}
+                style="padding-left: 1rem"
+              ></lightning-button-icon>
+            </div>
+          </div>
         </div>
       </template>
     </template>

@@ -1,8 +1,13 @@
 .body {
-    font-size: small;
-    font-weight: 500;
+  font-size: small;
+  font-weight: 500;
+  border-style: solid;
+  border-width: thin;
+  border-radius: 0.3rem;
+  padding: 0.3rem;
+  background-color: whitesmoke;
 }
 
 .comment-item {
-    margin-bottom: .3rem;
+  margin-bottom: 0.3rem;
 }

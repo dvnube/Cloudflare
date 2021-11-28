@@ -8,7 +8,7 @@ export default class PostsCommentsContainer extends LightningElement {
   postsComments;
   loaded = false;
   error;
-  selectedPage = 3;
+  selectedPage;
 
   @wire(getPosts)
   wiredPosts({ error, data }) {
@@ -34,6 +34,7 @@ export default class PostsCommentsContainer extends LightningElement {
             };
           })
         ];
+        this.selectedPage = 1;
         this.loaded = true;
       })
       .catch((error) => {
@@ -56,11 +57,35 @@ export default class PostsCommentsContainer extends LightningElement {
         { postComments: postComments }
       ];
     });
-    console.log(JSON.stringify(pages));
     return pages;
   }
 
   get pagesFiltered() {
     return this.pages.filter((page) => page.pageNumber == this.selectedPage);
+  }
+
+  get totalPages() {
+    return this.pages.length;
+  }
+
+  changePagination(event) {
+    this.selectedPage = event.detail;
+  }
+
+  nextPage(event) {
+    let nextPage = this.selectedPage + 1;
+    if (nextPage > this.totalPages) {
+      this.selectedPage = 1;
+    } else {
+      this.selectedPage = nextPage;
+    }
+  }
+  previousPage(event) {
+    let previousPage = this.selectedPage - 1;
+    if (previousPage < 1) {
+      this.selectedPage = this.totalPages;
+    } else {
+      this.selectedPage = previousPage;
+    }
   }
 }
