@@ -8,4 +8,52 @@
         <shortDescription>Lead - Partner</shortDescription>
         <value>Partner</value>
     </labels>
+    <labels>
+        <fullName>ErrorFirstNameNullBlank</fullName>
+        <categories>Leads - Rest API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Lead - Validation First Name</shortDescription>
+        <value>First Name cannot be null/blank</value>
+    </labels>
+    <labels>
+        <fullName>ErrorLastNameNullBlank</fullName>
+        <categories>Leads - Rest API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Lead - Validation Last Name</shortDescription>
+        <value>Last Name cannot be null/blank</value>
+    </labels>
+    <labels>
+        <fullName>ErrorPhoneCharacters</fullName>
+        <categories>Leads - Rest API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Lead - Validation Phone</shortDescription>
+        <value>Phone must be 10 characters</value>
+    </labels>
+    <labels>
+        <fullName>ErrorEmailFormat</fullName>
+        <categories>Leads - Rest API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Lead - Validation Email</shortDescription>
+        <value>Email must be in the form of a valid email address</value>
+    </labels>
+    <labels>
+        <fullName>Success</fullName>
+        <categories>Leads - Rest API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>Fail</fullName>
+        <categories>Leads - Rest API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Fail</shortDescription>
+        <value>Fail</value>
+    </labels>
 </CustomLabels>
