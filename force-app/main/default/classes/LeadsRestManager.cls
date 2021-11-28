@@ -6,31 +6,27 @@ global with sharing class LeadsRestManager {
     };
     
     @HttpPost
-    global static List<Lead> createLead(String firstName, String lastName, String phone, String email, String draftLeadSource) {
-        List<Lead> leadsCreate = new List<Lead>();
-        List<Lead> leadsUpdate = new List<Lead>();
-        List<Lead> returnValue = new List<Lead>();
+    global static String createLead(String firstName, String lastName, String phone, String email, String draftLeadSource) {
+        ResponseWrapper rw = new ResponseWrapper();
 
-        if (isValid(firstName, lastName, phone, email)) {
-            List<Lead> leads = LeadsSelector.selectByNamePhoneEmail(firstName, lastName, email);
-            handleCreateUpdate(new LeadWrapper(firstName, lastName, phone, email, draftLeadSource), leads, leadsCreate, leadsUpdate);
+        Boolean firstNameValid = String.isNotBlank(firstName);
+        Boolean lastNameValid = String.isNotBlank(lastName);
+        Boolean phoneValid = (String.isNotBlank(phone) && phone.length() == 10);
+        Boolean emailValid = validEmail(email);
+
+        if (firstNameValid && lastNameValid && phoneValid && emailValid) {
+            Lead record = createUpdate(new LeadWrapper(firstName, lastName, phone, email, draftLeadSource));
+            rw.LeadId = record.Id;
+            rw.Status = Label.Success;
+        } else {
+            rw.Status = Label.Fail;
+            handleError(rw, firstNameValid, Label.ErrorFirstNameNullBlank);
+            handleError(rw, lastNameValid, Label.ErrorLastNameNullBlank);
+            handleError(rw, phoneValid, Label.ErrorPhoneCharacters);
+            handleError(rw, emailValid, Label.ErrorEmailFormat);
         }
         
-        insert leadsCreate;
-        update leadsUpdate;
-
-        returnValue.addAll(leadsCreate);
-        returnValue.addAll(leadsUpdate);
-
-        return returnValue;
-    }
-
-    static Boolean isValid(String firstName, String lastName, String phone, String email) {
-        return 
-                String.isNotBlank(firstName)
-            &&  String.isNotBlank(lastName)
-            &&  (String.isNotBlank(phone) && phone.length() == 10)
-            &&  validEmail(email);
+        return JSON.serialize(rw);
     }
 
     static Boolean validEmail(String email) {
@@ -52,34 +48,47 @@ global with sharing class LeadsRestManager {
         return matcher.matches();
     }
 
-    static void handleCreateUpdate(LeadWrapper lw, List<Lead> leads, List<Lead> leadsCreate, List<Lead> leadsUpdate) {
+    static Lead createUpdate(LeadWrapper lw) {
+        List<Lead> leads = LeadsSelector.selectByNamePhoneEmail(lw.firstName, lw.lastName, lw.email);
+        Lead record;
+
         if (!exists(leads)) { //create
-            leadsCreate.add(createRecord(lw.firstName, lw.lastName, lw.phone, lw.email, lw.draftLeadSource));
+            record = createRecord(lw);
+            insert record;
         } else { //update
-            leadsUpdate.addAll(updateFields(leads, lw));
+            record = updateFields(leads.get(0), lw);
+            update record;
         }
+
+        return record;
     }
 
     static Boolean exists(List<Lead> leads) {
         return leads != null && !leads.isEmpty();
     }
 
-    static Lead createRecord(String firstName, String lastName, String phone, String email, String draftLeadSource) {
+    static Lead createRecord(LeadWrapper lw) {
         return new Lead(
-            FirstName = firstName,
-            LastName = lastName,
-            Phone = phone,
-            Email = email,
-            DraftSource__c = draftLeadSource
+            FirstName = lw.firstName,
+            LastName = lw.lastName,
+            Phone = lw.phone,
+            Email = lw.email,
+            DraftSource__c = lw.draftLeadSource
         );
     }
 
-    static List<Lead> updateFields(List<Lead> leads, LeadWrapper lw) {
+    static Lead updateFields(Lead record, LeadWrapper lw) {
         Map<Schema.SObjectField, Object> mapFieldsToUpdate = new Map<Schema.SObjectField, Object> {
             Lead.Phone => lw.phone
         };
 
-        return LeadsService.updateFields(leads, mapFieldsToUpdate);
+        return (LeadsService.updateFields(new List<Lead>{record}, mapFieldsToUpdate)).get(0);
+    }
+
+    static void handleError(ResponseWrapper rw, Boolean valid, String message) {
+        if (!valid) {
+            rw.ErrorsMessages.add(message);
+        }
     }
 
     class LeadWrapper {
@@ -96,6 +105,12 @@ global with sharing class LeadsRestManager {
             this.email = email;
             this.draftLeadSource = draftLeadSource;
         }
+    }
+
+    class ResponseWrapper {
+        String LeadId {get;set;}
+        String Status {get;set;}
+        List<String> ErrorsMessages {get;set;}
     }
 
 }
