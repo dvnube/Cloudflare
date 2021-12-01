@@ -1,14 +1,12 @@
 public with sharing class LeadPartnerBatchable implements Database.Batchable<sObject> {
-    public FINAL Boolean isPartner;
     public FINAL Map<Schema.SObjectField, Object> mapFieldsToUpdate;
 
-    public LeadPartnerBatchable(Boolean isPartner, Map<Schema.SObjectField, Object> mapFieldsToUpdate) {
-        this.isPartner = isPartner;
+    public LeadPartnerBatchable(Map<Schema.SObjectField, Object> mapFieldsToUpdate) {
         this.mapFieldsToUpdate = mapFieldsToUpdate;
     }
 
     public Database.QueryLocator start(Database.BatchableContext BC){
-       return Database.getQueryLocator(LeadsSelector.getQueryLocatorIsPartner(isPartner));
+       return Database.getQueryLocator(LeadsSelector.getQueryLocatorIsPartner());
     }
 
     public void execute(Database.BatchableContext BC, List<Lead> scope) {

@@ -2,6 +2,7 @@ public class LeadPartnerSchedulable implements Schedulable {
     FINAL Integer addMinutes;
     FINAL Map<Schema.SObjectField, Object> mapFieldsToUpdate = new Map<Schema.SObjectField, Object> {
         Lead.OwnerId => Ids__c.getOrgDefaults().LeadPartnerOwner__c
+        , Lead.LastPartnerBatchProcess__c => System.now()
     };
 
     public LeadPartnerSchedulable(Integer addMinutes) {
@@ -10,7 +11,7 @@ public class LeadPartnerSchedulable implements Schedulable {
 
     public void execute(SchedulableContext sc) {
         reschedule(sc);
-        Database.executeBatch(new LeadPartnerBatchable(true, mapFieldsToUpdate));
+        Database.executeBatch(new LeadPartnerBatchable(mapFieldsToUpdate));
     }
 
     void reschedule(SchedulableContext sc) {

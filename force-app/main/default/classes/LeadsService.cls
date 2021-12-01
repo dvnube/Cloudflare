@@ -46,14 +46,8 @@ public with sharing class LeadsService {
 
         for (Lead record : records) {
             Boolean isChanged = false;
-            for (Schema.SObjectField field : mapFieldsToUpdate.keySet()) {
-                Object oldValue = record.get(field);
-                Object newValue = mapFieldsToUpdate.get(field);
-                if (oldValue != newValue) {
-                    record.put(field, newValue);
-                    isChanged = true;
-                }
-            }
+            updateUsingMap(record, mapFieldsToUpdate, isChanged);
+            updateNewRequirements(record, isChanged);
 
             if (isChanged) {
                 leadsToUpdate.add(record);
@@ -61,5 +55,32 @@ public with sharing class LeadsService {
         }
 
         return leadsToUpdate;
+    }
+
+    static void updateUsingMap(Lead record, Map<Schema.SObjectField, Object> mapFieldsToUpdate, Boolean isChanged) {
+        for (Schema.SObjectField field : mapFieldsToUpdate.keySet()) {
+            Object oldValue = record.get(field);
+            Object newValue = mapFieldsToUpdate.get(field);
+            if (oldValue != newValue) {
+                record.put(field, newValue);
+                isChanged = true;
+            }
+        }
+    }
+
+    static void updateNewRequirements(Lead record, Boolean isChanged) {
+        if (record.IsPartnerLead__c || (greaterThan60Days(record.CreatedDate))) {
+            record.PartnerStatus__c = 'Golden Partner';
+            isChanged = true;
+        } else {
+            record.PartnerStatus__c = 'Normal Partner';
+            isChanged = true;
+        }
+    }
+
+    static Boolean greaterThan60Days(Datetime d) {
+        Integer daysBetween = d.date().daysBetween(now.date());
+
+        return daysBetween > 60;
     }
 }

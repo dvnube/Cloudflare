@@ -1,8 +1,7 @@
 public with sharing class LeadsSelector {
-    public static String getQueryLocatorIsPartner(Boolean isPartner) {
-        String query = ' SELECT Id, OwnerId ';
+    public static String getQueryLocatorIsPartner() {
+        String query = ' SELECT Id, OwnerId, CreatedDate, LastPartnerBatchProcess__c, IsPartnerLead__c ';
         query += ' FROM Lead ';
-        query += ' WHERE IsPartnerLead__c = ' + isPartner;
         
         return query;
     }
