@@ -79,7 +79,7 @@ public with sharing class LeadsService {
     }
 
     static Boolean greaterThan60Days(Datetime d) {
-        Integer daysBetween = d.date().daysBetween(now.date());
+        Integer daysBetween = d.date().daysBetween(System.now().date());
 
         return daysBetween > 60;
     }
